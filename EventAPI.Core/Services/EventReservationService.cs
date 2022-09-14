@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace EventAPI.Core.Model
+namespace EventAPI.Core.Services
 {
-    public class EventReservation
+    public class EventReservationService
     {
     }
 }
