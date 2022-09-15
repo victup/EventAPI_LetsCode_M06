@@ -1,5 +1,6 @@
 ﻿using EventAPI.Core.Interfaces.ServicesInterface;
 using EventAPI.Core.Model;
+using EventAPI.Filters;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
@@ -8,6 +9,9 @@ namespace EventAPI.Controllers
 {
     [ApiController]
     [Route("[controller]")]
+    [Produces("application/json")]
+    [TypeFilter(typeof(LogResourceFilter))]
+    [TypeFilter(typeof(LogAuthorizationFilter))]
     public class CityEventController : Controller
     {
         public ICityEventService _cityEventService;
@@ -21,14 +25,17 @@ namespace EventAPI.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         public ActionResult<List<Event>> SearchEvents(string title)
         {
+            Console.WriteLine($"Iniciando busca do evento através do title fornecido. Titulo: {title}");
+
             return Ok(_cityEventService.GetEventByTitle(title));
         }
 
         [HttpGet("/eventos_por_local_e_data")]
-        [Produces("application/json")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         public ActionResult<List<Event>> SearchEventsByLocalAndDate(string local, DateTime data)
         {
+            Console.WriteLine($"Iniciando busca do evento através do local e data fornecidos. Local: {local} / Data:{data}");
+
             return Ok(_cityEventService.GetEventByLocalAndDate(local, data));
         }
 
@@ -36,6 +43,8 @@ namespace EventAPI.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         public ActionResult<List<Event>> SearchEventsByPriceAndData(decimal minValue, decimal maxValue, DateTime data)
         {
+            Console.WriteLine($"Iniciando busca do evento através do preços e data fornecidos. valor mínimo R$ {minValue}/ Valor máximo: R${maxValue}/ Data: {data}");
+
             return Ok(_cityEventService.GetEventByPriceAndDate(minValue, maxValue, data));
         }
 
@@ -44,7 +53,8 @@ namespace EventAPI.Controllers
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public ActionResult<Event> NewEvent([FromBody] Event newEvent)
         {
-            Console.WriteLine("Iniciando");
+            Console.WriteLine($"Criando novo Evento. Nome: {newEvent.Title}");
+
             if (!_cityEventService.AddNewEvent(newEvent))
             {
                 return BadRequest();
@@ -59,7 +69,8 @@ namespace EventAPI.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public IActionResult UpdateEvent(long id, Event eventForUpdate)
         {
-            Console.WriteLine("Iniciando");
+            Console.WriteLine($"Atualizando o evento de ID {id}. Novo Titulo: {eventForUpdate.Title}");
+
             if (!_cityEventService.UpdateEvent(id, eventForUpdate))
             {
                 return new StatusCodeResult(StatusCodes.Status500InternalServerError);
@@ -76,7 +87,8 @@ namespace EventAPI.Controllers
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public ActionResult<List<Event>> CancelEvent(string titleEvent)
         {
-            Console.WriteLine("Iniciando");
+            Console.WriteLine($"Cancelando Evento. Title: {titleEvent}");
+
             if (!_cityEventService.RemoveEvent(titleEvent))
             {
                 return new StatusCodeResult(StatusCodes.Status500InternalServerError);

@@ -5,6 +5,7 @@ using Microsoft.Data.SqlClient;
 using Microsoft.Extensions.Configuration;
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -47,7 +48,7 @@ namespace EventAPI.Infra.Data.Repositorys
 
            var dateHourEvent = dateEvent.ToString("yyyy-MM-ddTHH:mm:ss.fff");
 
-            var query = $"SELECT * FROM CityEvent AS E WHERE E.Local = @Local AND CAST(E.DateHourEvent AS DATE) =  CAST(@Date AS Date)";
+            var query = $"SELECT * FROM CityEvent AS E WHERE E.Local = @Local AND CAST(E.DateHourEvent AS DATE) =  CAST(@Date AS Date) AND Status = 1";
 
             var parameters = new DynamicParameters();
             parameters.Add("Local", localEvent);
@@ -62,7 +63,7 @@ namespace EventAPI.Infra.Data.Repositorys
         {
             var dateHourEvent = dateEvent.ToString("yyyy-MM-ddTHH:mm:ss.fff");
 
-            var query = $"SELECT * FROM CityEvent AS E WHERE E.Price BETWEEN @MinPrice AND @MaxPrice AND CAST(E.DateHourEvent AS DATE) = CAST(@Date AS Date)";
+            var query = $"SELECT * FROM CityEvent AS E WHERE E.Price BETWEEN @MinPrice AND @MaxPrice AND CAST(E.DateHourEvent AS DATE) = CAST(@Date AS Date) AND Status = 1";
 
             var parameters = new DynamicParameters();
             parameters.Add("MinPrice", minPrice);
@@ -77,7 +78,7 @@ namespace EventAPI.Infra.Data.Repositorys
         public List<Event> GetEventByTitle(string titleEvent)
         {
 
-            var query = $"SELECT * FROM CityEvent WHERE Title like '%'+@Title+'%'";
+            var query = $"SELECT * FROM CityEvent WHERE Title like '%'+@Title+'%' AND Status = 1";
 
             var parameters = new DynamicParameters();
             parameters.Add("Title", titleEvent);
@@ -91,23 +92,30 @@ namespace EventAPI.Infra.Data.Repositorys
 
     public bool RemoveEvent(string titleEvent)
     {
-        var query = "DELETE FROM CityEvent where Title = @Title";
+        var queryDeletar = "DELETE FROM CityEvent where Title = @Title";
+
+        var queryInativar = "UPDATE CityEvent SET Status = 0 WHERE Title = @Title";
 
         var parameters = new DynamicParameters();
         parameters.Add("Title", titleEvent);
 
         using var conn = new SqlConnection(_configuration.GetConnectionString("DefaultConnection"));
 
-        try
-        {
-            return conn.Execute(query, parameters) == 1;
-        }
-        catch (Exception)
-        {
-            Console.WriteLine("Não foi possível excluir o evento.");
-            Console.WriteLine("Local Error: CityEventRepository/RemoveEvent");
-            return false;
-        }
+            try
+            {
+                return conn.Execute(queryDeletar, parameters) == 1;
+            }
+            catch (SqlException)
+            {
+                return conn.Execute(queryInativar, parameters) == 1;
+            }
+            catch (Exception)
+            {
+                Console.WriteLine("Não foi possível excluir o evento.");
+                Console.WriteLine("Local Error: CityEventRepository/RemoveEvent");
+                return false;
+            }
+
 
     }
 
