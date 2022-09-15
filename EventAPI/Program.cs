@@ -14,7 +14,8 @@ builder.Services.AddSwaggerGen();
 
 builder.Services.AddScoped<ICityEventService, CityEventService>();
 builder.Services.AddScoped<ICityEventRepository, CityEventRepository>();
-
+builder.Services.AddScoped<IEventReservationService, EventReservationService>();
+builder.Services.AddScoped<IEventReservationRepository, EventReservationRepository>();
 
 var app = builder.Build();
 

@@ -1,6 +1,6 @@
 ﻿using EventAPI.Core.Interfaces.RepositorysInterface;
 using EventAPI.Core.Interfaces.ServicesInterface;
-using EventAPI.Core.Model.DTOs;
+using EventAPI.Core.Model;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
@@ -19,35 +19,32 @@ namespace EventAPI.Core.Services
             _cityEventRepository = cityEventRepository;
         }
 
-        public bool AddNewEvent(EventDTO newEvent)
+        public bool AddNewEvent(Event newEvent)
         {
             return _cityEventRepository.AddNewEvent(newEvent);
         }
 
-        public EventDTO GetEventByLocalAndDate(string localEvent, DateTime dateEvent)
+        public List<Event> GetEventByLocalAndDate(string localEvent, DateTime dateEvent)
         {
-            throw new NotImplementedException();
+            return _cityEventRepository.GetEventByLocalAndDate(localEvent, dateEvent);
         }
 
-        public EventDTO GetEventByPriceAndDate(decimal minPrice, decimal maxPrice, DateTime dateEvent)
+        public List<Event> GetEventByPriceAndDate(decimal minPrice, decimal maxPrice, DateTime dateEvent)
         {
-            throw new NotImplementedException();
+            return _cityEventRepository.GetEventByPriceAndDate(minPrice, maxPrice, dateEvent);
         }
 
-        public EventDTO GetEventByTitle(string titleEvent)
+        public List<Event> GetEventByTitle(string titleEvent)
         {
-            throw new NotImplementedException();
+            return _cityEventRepository.GetEventByTitle(titleEvent);
         }
 
         public bool RemoveEvent(string titleEvent)
         {
-            if (!_cityEventRepository.CheckExistenceOfActiveReservations(titleEvent))
-                return _cityEventRepository.RemoveEvent(titleEvent);
-            else
-            return false;
+            return _cityEventRepository.RemoveEvent(titleEvent);
         }
 
-        public bool UpdateEvent(long idEvent, EventDTO eventForUpdate)
+        public bool UpdateEvent(long idEvent, Event eventForUpdate)
         {
             return _cityEventRepository.UpdateEvent(idEvent, eventForUpdate);
         }

@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace EventAPI.Core.Model.DTOs
+namespace EventAPI.Core.Model
 {
-    public class EventDTO
+    public class Event
     {
 
         public long IdEvent { get; set; }
@@ -18,8 +18,9 @@ namespace EventAPI.Core.Model.DTOs
         public decimal Price { get; set; }
         public bool Status { get; set; }
 
-        public EventDTO(string title, string description, DateTime dateHourEvent, string local, string address, decimal price, bool status)
+        public Event(long idEvent, string title, string description, DateTime dateHourEvent, string local, string address, decimal price, bool status)
         {
+            IdEvent = idEvent;
             Title = title;
             Description = description;
             DateHourEvent = dateHourEvent;

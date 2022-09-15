@@ -1,4 +1,4 @@
-﻿using EventAPI.Core.Model.DTOs;
+﻿using EventAPI.Core.Model;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,12 +9,11 @@ namespace EventAPI.Core.Interfaces.RepositorysInterface
 {
     public interface ICityEventRepository
     {
-        public bool AddNewEvent(EventDTO newEvent);
-        public bool UpdateEvent(long idEvent, EventDTO eventForUpdate);
+        public bool AddNewEvent(Event newEvent);
+        public bool UpdateEvent(long idEvent, Event eventForUpdate);
         public bool RemoveEvent(string titleEvent);
-        public bool CheckExistenceOfActiveReservations(string title);
-        public EventDTO GetEventByTitle(string titleEvent);
-        public EventDTO GetEventByLocalAndDate(string localEvent, DateTime dateEvent);
-        public EventDTO GetEventByPriceAndDate(decimal minPrice, decimal maxPrice, DateTime dateEvent);
+        public List<Event> GetEventByTitle(string titleEvent);
+        public List<Event> GetEventByLocalAndDate(string localEvent, DateTime dateEvent);
+        public List<Event> GetEventByPriceAndDate(decimal minPrice, decimal maxPrice, DateTime dateEvent);
     }
 }

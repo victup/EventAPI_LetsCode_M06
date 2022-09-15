@@ -1,5 +1,4 @@
 ﻿using EventAPI.Core.Model;
-using EventAPI.Core.Model.DTOs;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -11,12 +10,12 @@ namespace EventAPI.Core.Interfaces.ServicesInterface
 {
     public interface ICityEventService
     {
-        public bool AddNewEvent(EventDTO newEvent);
-        public bool UpdateEvent(long idEvent, EventDTO eventForUpdate);
+        public bool AddNewEvent(Event newEvent);
+        public bool UpdateEvent(long idEvent, Event eventForUpdate);
         public bool RemoveEvent(string titleEvent);
-        public EventDTO GetEventByTitle(string titleEvent);
-        public EventDTO GetEventByLocalAndDate(string localEvent, DateTime dateEvent);
-        public EventDTO GetEventByPriceAndDate(decimal minPrice, decimal maxPrice, DateTime dateEvent);
+        public List<Event> GetEventByTitle(string titleEvent);
+        public List<Event> GetEventByLocalAndDate(string localEvent, DateTime dateEvent);
+        public List<Event> GetEventByPriceAndDate(decimal minPrice, decimal maxPrice, DateTime dateEvent);
 
     }
 }
