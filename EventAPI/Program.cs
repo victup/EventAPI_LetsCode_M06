@@ -3,12 +3,45 @@ using EventAPI.Core.Interfaces.ServicesInterface;
 using EventAPI.Core.Services;
 using EventAPI.Filters;
 using EventAPI.Infra.Data.Repositorys;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
+
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("PolicyCors",
+        policy =>
+        {
+            policy.AllowAnyOrigin();
+            policy.AllowAnyHeader();
+            policy.AllowAnyMethod();
+            
+        });
+});
 
 // Add services to the container.
 
 builder.Services.AddControllers();
+
+
+var key = Encoding.ASCII.GetBytes(builder.Configuration["secretKey"]);
+
+builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+    .AddJwtBearer(options =>
+    {
+        options.TokenValidationParameters = new TokenValidationParameters
+        {
+            ValidateIssuerSigningKey = true,
+            IssuerSigningKey = new SymmetricSecurityKey(key),
+            ValidateIssuer = true,
+            ValidIssuer = "APIClientes.com",
+            ValidateAudience = true,
+            ValidAudience = "APIEvents.com"
+        };
+    });
+
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
@@ -17,6 +50,7 @@ builder.Services.AddMvc(options =>
 {
     options.Filters.Add<RuntimeActionFilter>();
     options.Filters.Add<LogResultFilter>();
+    options.Filters.Add<GeneralExceptionFilter>();
 }
 );
 
@@ -37,7 +71,11 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
+app.UseAuthentication();
+
 app.UseAuthorization();
+
+app.UseCors("PolicyCors");
 
 app.MapControllers();
 
