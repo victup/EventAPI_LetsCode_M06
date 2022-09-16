@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace EventAPI.Core.Model.DTOs
 {
-    public class GetBookingByPersonAndTitleResponseDTO
+    public class BookingByPersonAndTitleDTO
     {
         public string PersonName { get; set; }
         public long Quantity { get; set; }
@@ -18,7 +18,7 @@ namespace EventAPI.Core.Model.DTOs
         public decimal Price { get; set; }
         public bool Status { get; set; }
 
-        public GetBookingByPersonAndTitleResponseDTO(string personName, long quantity, string title, string description, DateTime dateHourEvent, string local, string address, decimal price, bool status)
+        public BookingByPersonAndTitleDTO(string personName, long quantity, string title, string description, DateTime dateHourEvent, string local, string address, decimal price, bool status)
         {
             PersonName = personName;
             Quantity = quantity;

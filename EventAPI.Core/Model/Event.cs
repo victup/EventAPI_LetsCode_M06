@@ -10,7 +10,7 @@ namespace EventAPI.Core.Model
     public class Event
     {
 
-        public long IdEvent { get; set; }
+        public long IdEvent { get; private set; }
 
         [Required(ErrorMessage = "Título é um campo com preenchimento obrigatório")]
         [StringLength(maximumLength:100, ErrorMessage = "O campo titulo não pode conter mais de 100 caracteres)")]
@@ -32,9 +32,14 @@ namespace EventAPI.Core.Model
         public decimal Price { get; set; }
         public bool Status { get; set; }
 
+        public void SetIdEvent(long IdEvent)
+        {
+            this.IdEvent = IdEvent;
+        }
+
         public Event(long idEvent, string title, string description, DateTime dateHourEvent, string local, string address, decimal price, bool status)
         {
-            IdEvent = idEvent;
+            SetIdEvent(idEvent);
             Title = title;
             Description = description;
             DateHourEvent = dateHourEvent;

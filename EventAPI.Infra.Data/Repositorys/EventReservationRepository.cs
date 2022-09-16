@@ -36,12 +36,10 @@ namespace EventAPI.Infra.Data.Repositorys
             return conn.Execute(query, parameters) == 1;
         }
 
-        public List<GetBookingByPersonAndTitleResponseDTO> GetBookingByPersonNameAndTitle(string personName, string eventTitle)
+        public List<EventReservation> GetBookingByPersonNameAndTitle(string personName, string eventTitle)
         {
-            var query = @$"SELECT R.PersonName, R.Quantity,E.Title, E.Description, E.DateHourEvent, E.Local, E.Address, E.Price, E.Status FROM EventReservation AS R
-INNER JOIN CityEvent AS E
-ON R.IdEvent = E.IdEvent
-WHERE R.PersonName = @PersonName AND E.Title LIKE '%'+@EventTitle+'%'";
+            var query = @$"SELECT R.IdReservation, R.IdEvent, R.PersonName, R.Quantity FROM CityEvent AS E INNER JOIN EventReservation R 
+ON E.IdEvent = R.IdEvent WHERE R.PersonName = @PersonName AND E.Title LIKE '%'+@EventTitle+'%'";
 
             var parameters = new DynamicParameters();
             parameters.Add("PersonName", personName);
@@ -50,7 +48,7 @@ WHERE R.PersonName = @PersonName AND E.Title LIKE '%'+@EventTitle+'%'";
 
             using var conn = new SqlConnection(_configuration.GetConnectionString("DefaultConnection"));
 
-            return conn.Query<GetBookingByPersonAndTitleResponseDTO>(query, parameters).ToList();
+            return conn.Query<EventReservation>(query, parameters).ToList();
         }
 
         public bool RemoveBooking(string personName, string eventTitle)

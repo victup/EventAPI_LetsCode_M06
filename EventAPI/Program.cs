@@ -1,5 +1,7 @@
+using EventAPI.Core.Interfaces.MapperInterface;
 using EventAPI.Core.Interfaces.RepositorysInterface;
 using EventAPI.Core.Interfaces.ServicesInterface;
+using EventAPI.Core.Mappers;
 using EventAPI.Core.Services;
 using EventAPI.Filters;
 using EventAPI.Infra.Data.Repositorys;
@@ -59,6 +61,7 @@ builder.Services.AddScoped<ICityEventService, CityEventService>();
 builder.Services.AddScoped<ICityEventRepository, CityEventRepository>();
 builder.Services.AddScoped<IEventReservationService, EventReservationService>();
 builder.Services.AddScoped<IEventReservationRepository, EventReservationRepository>();
+builder.Services.AddScoped<IBookingMapper, BookingMapper>();
 
 var app = builder.Build();
 

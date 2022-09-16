@@ -88,9 +88,22 @@ namespace EventAPI.Infra.Data.Repositorys
             return conn.Query<Event>(query, parameters).ToList();
         }
 
-    
+        public List<Event> GetEventByPersonNameAndTitle(string personName, string titleEvent)
+        {
 
-    public bool RemoveEvent(string titleEvent)
+            var query = @$"SELECT E.IdEvent, E.Title, E.Description, E.DateHourEvent, E.Local, E.Address, E.Price, E.Status FROM CityEvent AS E INNER JOIN EventReservation R 
+ON E.IdEvent = R.IdEvent WHERE R.PersonName = @PersonName AND E.Title LIKE '%'+@Title+'%';";
+
+            var parameters = new DynamicParameters();
+            parameters.Add("PersonName", personName);
+            parameters.Add("Title", titleEvent);
+    
+            using var conn = new SqlConnection(_configuration.GetConnectionString("DefaultConnection"));
+
+            return conn.Query<Event>(query, parameters).ToList();
+        }
+
+        public bool RemoveEvent(string titleEvent)
     {
         var queryDeletar = "DELETE FROM CityEvent where Title = @Title";
 

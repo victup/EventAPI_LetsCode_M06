@@ -34,7 +34,7 @@ namespace EventAPI.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [Authorize(Roles = "cliente, admin")]
-        public ActionResult<List<GetBookingByPersonAndTitleResponseDTO>> SearchReservationByPersonAndTitle(string person, string title)
+        public ActionResult<List<BookingByPersonAndTitleDTO>> SearchReservationByPersonAndTitle(string person, string title)
         {
             Console.WriteLine($"Buscando as reservas de eventos com titulo {title} para a pessoa  {person}");
 
@@ -46,12 +46,12 @@ namespace EventAPI.Controllers
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [Authorize(Roles = "cliente, admin")]
-        public ActionResult<EventReservation> NewEvent([FromBody] EventReservation newBooking)
+        public ActionResult<EventReservation> NewEvent(long idEvent, AddNewBookingRequestDTO newBooking)
         {
 
-            Console.WriteLine($"Reservando evento {newBooking.IdEvent} para pessoa {newBooking.PersonName}");
+            Console.WriteLine($"Reservando evento {idEvent} para pessoa {newBooking.PersonName}");
 
-            if (!_reservationService.AddNewBooking(newBooking))
+            if (!_reservationService.AddNewBooking(idEvent, newBooking))
             {
                 return BadRequest();
             }

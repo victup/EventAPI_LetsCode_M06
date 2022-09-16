@@ -10,9 +10,9 @@ namespace EventAPI.Core.Interfaces.ServicesInterface
 {
     public interface IEventReservationService
     {
-        public bool AddNewBooking(EventReservation newBooking);
+        public bool AddNewBooking(long idEvent, AddNewBookingRequestDTO newBooking);
         public bool UpdateBooking(long idReservation, long quantity);
         public bool RemoveBooking(string personName, string eventTitle);
-        public List<GetBookingByPersonAndTitleResponseDTO> GetBookingByPersonNameAndTitle(string personName, string eventTitle);
+        public List<BookingByPersonAndTitleDTO> GetBookingByPersonNameAndTitle(string personName, string eventTitle);
     }
 }

@@ -15,5 +15,6 @@ namespace EventAPI.Core.Interfaces.RepositorysInterface
         public List<Event> GetEventByTitle(string titleEvent);
         public List<Event> GetEventByLocalAndDate(string localEvent, DateTime dateEvent);
         public List<Event> GetEventByPriceAndDate(decimal minPrice, decimal maxPrice, DateTime dateEvent);
+        public List<Event> GetEventByPersonNameAndTitle(string personName, string titleEvent);
     }
 }

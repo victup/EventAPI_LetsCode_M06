@@ -13,7 +13,7 @@ namespace EventAPI.Core.Interfaces.RepositorysInterface
         public bool AddNewBooking(EventReservation newBooking);
         public bool UpdateBooking(long idReservation, long quantity);
         public bool RemoveBooking(string personName, string eventTitle);
-        public List<GetBookingByPersonAndTitleResponseDTO> GetBookingByPersonNameAndTitle(string personName, string eventTitle);
+        public List<EventReservation> GetBookingByPersonNameAndTitle(string personName, string eventTitle);
        
     }
 }
