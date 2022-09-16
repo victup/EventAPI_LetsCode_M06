@@ -44,7 +44,9 @@ namespace EventAPI.Core.Services
 
         public bool RemoveBooking(string personName, string eventTitle)
         {
-           return (_reservationRepository.RemoveBooking(personName, eventTitle));
+           var idForRemove = _reservationRepository.GetIdBooking(personName, eventTitle);
+
+           return (_reservationRepository.RemoveBooking(idForRemove));
         }
 
         public bool UpdateBooking(long idReservation, long quantity)

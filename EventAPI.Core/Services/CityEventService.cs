@@ -41,11 +41,19 @@ namespace EventAPI.Core.Services
 
         public bool RemoveEvent(string titleEvent)
         {
-            return _cityEventRepository.RemoveEvent(titleEvent);
+            var eventForRemove = _cityEventRepository.GetIdEvent(titleEvent);
+            var reservationEvent = _cityEventRepository.CheckExistenceOfReservation(eventForRemove);
+
+            if (reservationEvent == 0)
+                 return _cityEventRepository.RemoveEvent(eventForRemove);
+
+            else
+                return _cityEventRepository.InactivateEvent(eventForRemove);
         }
 
-        public bool UpdateEvent(long idEvent, Event eventForUpdate)
+        public bool UpdateEvent(string titleEvent, Event eventForUpdate)
         {
+            var idEvent = _cityEventRepository.GetIdEvent(titleEvent);
             return _cityEventRepository.UpdateEvent(idEvent, eventForUpdate);
         }
     }

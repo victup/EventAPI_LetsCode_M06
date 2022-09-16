@@ -31,11 +31,11 @@ namespace EventAPI.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [Authorize(Roles = "cliente, admin")]
-        public ActionResult<List<Event>> SearchEvents(string title)
+        public ActionResult<List<Event>> SearchEvents(string titleEvent)
         {
-            Console.WriteLine($"Iniciando busca do evento através do title fornecido. Titulo: {title}");
+            Console.WriteLine($"Iniciando busca do evento através do title fornecido. Titulo: {titleEvent}");
 
-            return Ok(_cityEventService.GetEventByTitle(title));
+            return Ok(_cityEventService.GetEventByTitle(titleEvent));
         }
 
         [HttpGet("/eventos_por_local_e_data")]
@@ -84,12 +84,13 @@ namespace EventAPI.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
+        [ServiceFilter(typeof(ValidateCityEventActionFilter))]
         [Authorize(Roles = "admin")]
-        public IActionResult UpdateEvent(long id, Event eventForUpdate)
+        public IActionResult UpdateEvent(string titleEvent, Event eventForUpdate)
         {
-            Console.WriteLine($"Atualizando o evento de ID {id}. Novo Titulo: {eventForUpdate.Title}");
+            Console.WriteLine($"Atualizando o evento  {titleEvent} p/ novo Titulo: {eventForUpdate.Title}");
 
-            if (!_cityEventService.UpdateEvent(id, eventForUpdate))
+            if (!_cityEventService.UpdateEvent(titleEvent, eventForUpdate))
             {
                 return new StatusCodeResult(StatusCodes.Status500InternalServerError);
             }
@@ -104,6 +105,7 @@ namespace EventAPI.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
+        [ServiceFilter(typeof(ValidateCityEventActionFilter))]
         [Authorize(Roles = "admin")]
         public ActionResult<List<Event>> CancelEvent(string titleEvent)
         {

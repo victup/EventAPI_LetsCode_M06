@@ -51,9 +51,9 @@ ON E.IdEvent = R.IdEvent WHERE R.PersonName = @PersonName AND E.Title LIKE '%'+@
             return conn.Query<EventReservation>(query, parameters).ToList();
         }
 
-        public bool RemoveBooking(string personName, string eventTitle)
+        public long GetIdBooking(string personName, string eventTitle)
         {
-            var queryIdBooking = @$"SELECT R.IdEvent FROM EventReservation AS R
+            var queryIdBooking = @$"SELECT R.IdReservation FROM EventReservation AS R
 INNER JOIN CityEvent AS E
 ON R.IdEvent = E.IdEvent
 WHERE R.PersonName = @PersonName AND E.Title = @EventTitle";
@@ -65,12 +65,30 @@ WHERE R.PersonName = @PersonName AND E.Title = @EventTitle";
 
             using var conn = new SqlConnection(_configuration.GetConnectionString("DefaultConnection"));
 
-            long idForRemove = long.Parse(conn.QueryFirstOrDefault<long>(queryIdBooking, parameters).ToString());
+            return long.Parse(conn.QueryFirstOrDefault<long>(queryIdBooking, parameters).ToString());
+        }
 
-            var query = $@"DELETE FROM EventReservation WHERE IdEvent = @IdEvent AND PersonName = @PersonName";
+        public long GetIdBooking(long idBooking)
+        {
+            var queryIdBooking = @$"SELECT R.IdReservation FROM EventReservation AS R WHERE IdReservation = @IdReservation";
 
-            parameters.Add("IdEvent", idForRemove);
-            parameters.Add("PersonName", personName);
+            var parameters = new DynamicParameters();
+            parameters.Add("IdReservation", idBooking);
+
+            using var conn = new SqlConnection(_configuration.GetConnectionString("DefaultConnection"));
+
+            return long.Parse(conn.QueryFirstOrDefault<long>(queryIdBooking, parameters).ToString());
+        }
+
+        public bool RemoveBooking(long idEventReservation)
+        {
+
+            var query = $@"DELETE FROM EventReservation WHERE idReservation = @idEventReservation";
+
+            var parameters = new DynamicParameters();
+            parameters.Add("idEventReservation", idEventReservation);
+
+            using var conn = new SqlConnection(_configuration.GetConnectionString("DefaultConnection"));
 
             try
             {
@@ -84,6 +102,7 @@ WHERE R.PersonName = @PersonName AND E.Title = @EventTitle";
             }
 
         }
+
 
         public bool UpdateBooking(long idReservation, long quantity)
         {

@@ -61,6 +61,9 @@ builder.Services.AddScoped<ICityEventService, CityEventService>();
 builder.Services.AddScoped<ICityEventRepository, CityEventRepository>();
 builder.Services.AddScoped<IEventReservationService, EventReservationService>();
 builder.Services.AddScoped<IEventReservationRepository, EventReservationRepository>();
+builder.Services.AddScoped<DeleteBookingActionFilter>();
+builder.Services.AddScoped<UpdateBookingActionFilter>();
+builder.Services.AddScoped<ValidateCityEventActionFilter>();
 builder.Services.AddScoped<IBookingMapper, BookingMapper>();
 
 var app = builder.Build();

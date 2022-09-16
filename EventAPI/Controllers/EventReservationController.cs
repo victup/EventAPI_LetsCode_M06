@@ -65,6 +65,7 @@ namespace EventAPI.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
+        [ServiceFilter(typeof(UpdateBookingActionFilter))]
         [Authorize(Roles = "admin")]
         public IActionResult UpdateBooking(long idReservation, long quantity)
         {
@@ -84,6 +85,7 @@ namespace EventAPI.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
+        [ServiceFilter(typeof(DeleteBookingActionFilter))]
         [Authorize(Roles = "admin")]
         public IActionResult CancelBooking(string personName, string eventTitle)
         {

@@ -103,53 +103,75 @@ ON E.IdEvent = R.IdEvent WHERE R.PersonName = @PersonName AND E.Title LIKE '%'+@
             return conn.Query<Event>(query, parameters).ToList();
         }
 
-        public bool RemoveEvent(string titleEvent)
-    {
-        var queryDeletar = "DELETE FROM CityEvent where Title = @Title";
+        public long GetIdEvent(string titleEvent)
+        {
+           
+                var query = $"SELECT idEvent FROM CityEvent WHERE Title like '%'+@Title+'%'";
 
-        var queryInativar = "UPDATE CityEvent SET Status = 0 WHERE Title = @Title";
+                var parameters = new DynamicParameters();
+                parameters.Add("Title", titleEvent);
 
-        var parameters = new DynamicParameters();
-        parameters.Add("Title", titleEvent);
+                using var conn = new SqlConnection(_configuration.GetConnectionString("DefaultConnection"));
 
-        using var conn = new SqlConnection(_configuration.GetConnectionString("DefaultConnection"));
+                return long.Parse(conn.QueryFirstOrDefault<long>(query, parameters).ToString());
+            
+        }
 
-            try
-            {
-                return conn.Execute(queryDeletar, parameters) == 1;
-            }
-            catch (SqlException)
-            {
-                return conn.Execute(queryInativar, parameters) == 1;
-            }
-            catch (Exception)
-            {
-                Console.WriteLine("Não foi possível excluir o evento.");
-                Console.WriteLine("Local Error: CityEventRepository/RemoveEvent");
-                return false;
-            }
+        public bool RemoveEvent(long idEvent)
+        {
+            var queryDeletar = "DELETE FROM CityEvent where idEvent = @IdEvent";
 
+            var parameters = new DynamicParameters();
+            parameters.Add("IdEvent", idEvent);
 
-    }
+            using var conn = new SqlConnection(_configuration.GetConnectionString("DefaultConnection"));
+    
+            return conn.Execute(queryDeletar, parameters) == 1;   
+        }
 
-    public bool UpdateEvent(long idEvent, Event eventForUpdate)
-    {
-        var query = "UPDATE CityEvent SET Title = @Title, Description = @Description, DateHourEvent = @DateHourEvent, Local = @Local, Address = @Address, Price = @Price, Status = @Status WHERE IdEvent = @IdEvent";
+        public long CheckExistenceOfReservation (long idEvent)
+        {
+            var query = @$"SELECT R.IdReservation FROM CityEvent AS E INNER JOIN EventReservation R 
+ON E.IdEvent = R.IdEvent WHERE E.IdEvent = @IdEvent";
 
-        var parameters = new DynamicParameters();
+            var parameters = new DynamicParameters();
+            parameters.Add("IdEvent", idEvent);
 
-        parameters.Add("IdEvent", idEvent);
-        parameters.Add("Title", eventForUpdate.Title);
-        parameters.Add("Description", eventForUpdate.Description);
-        parameters.Add("DateHourEvent", eventForUpdate.DateHourEvent);
-        parameters.Add("Local", eventForUpdate.Local);
-        parameters.Add("Address", eventForUpdate.Address);
-        parameters.Add("Price", eventForUpdate.Price);
-        parameters.Add("Status", eventForUpdate.Status);
+            using var conn = new SqlConnection(_configuration.GetConnectionString("DefaultConnection"));
 
-        using var conn = new SqlConnection(_configuration.GetConnectionString("DefaultConnection"));
+            return long.Parse(conn.QueryFirstOrDefault<long>(query, parameters).ToString());
+        }
 
-        return conn.Execute(query, parameters) == 1;
+        public bool InactivateEvent(long idEvent)
+        {
+            var query = @$"UPDATE CityEvent SET Status = 0 WHERE idEvent = @IdEvent";
+
+            var parameters = new DynamicParameters();
+            parameters.Add("IdEvent", idEvent);
+
+            using var conn = new SqlConnection(_configuration.GetConnectionString("DefaultConnection"));
+
+            return conn.Execute(query, parameters) == 1;
+        }
+
+        public bool UpdateEvent(long idEvent, Event eventForUpdate)
+        {
+            var query = "UPDATE CityEvent SET Title = @Title, Description = @Description, DateHourEvent = @DateHourEvent, Local = @Local, Address = @Address, Price = @Price, Status = @Status WHERE IdEvent = @IdEvent";
+
+            var parameters = new DynamicParameters();
+
+            parameters.Add("IdEvent", idEvent);
+            parameters.Add("Title", eventForUpdate.Title);
+            parameters.Add("Description", eventForUpdate.Description);
+            parameters.Add("DateHourEvent", eventForUpdate.DateHourEvent);
+            parameters.Add("Local", eventForUpdate.Local);
+            parameters.Add("Address", eventForUpdate.Address);
+            parameters.Add("Price", eventForUpdate.Price);
+            parameters.Add("Status", eventForUpdate.Status);
+
+            using var conn = new SqlConnection(_configuration.GetConnectionString("DefaultConnection"));
+
+            return conn.Execute(query, parameters) == 1;
 
         } 
     }

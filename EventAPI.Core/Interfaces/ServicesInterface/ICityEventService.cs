@@ -11,7 +11,7 @@ namespace EventAPI.Core.Interfaces.ServicesInterface
     public interface ICityEventService
     {
         public bool AddNewEvent(Event newEvent);
-        public bool UpdateEvent(long idEvent, Event eventForUpdate);
+        public bool UpdateEvent(string titleEvent, Event eventForUpdate);
         public bool RemoveEvent(string titleEvent);
         public List<Event> GetEventByTitle(string titleEvent);
         public List<Event> GetEventByLocalAndDate(string localEvent, DateTime dateEvent);
