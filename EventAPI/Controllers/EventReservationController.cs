@@ -30,8 +30,9 @@ namespace EventAPI.Controllers
             _reservationService = reservationService;
         }
 
-        [HttpGet("/reserva_por_pessoa_e_evento")]
+        [HttpGet("/consultar_reserva_por_pessoa_e_evento")]
         [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [Authorize(Roles = "cliente, admin")]
         public ActionResult<List<BookingByPersonAndTitleDTO>> SearchReservationByPersonAndTitle(string person, string title)
@@ -42,7 +43,7 @@ namespace EventAPI.Controllers
         }
 
 
-        [HttpPost("/comrpar_ingressos")]
+        [HttpPost("/criar_reserva")]
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [Authorize(Roles = "cliente, admin")]
@@ -60,6 +61,7 @@ namespace EventAPI.Controllers
         }
 
         [HttpPut("/alterar_reserva")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -79,7 +81,8 @@ namespace EventAPI.Controllers
             return Ok();
         }
 
-        [HttpDelete("/apagar_resserva")]
+        [HttpDelete("/apagar_reserva")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]

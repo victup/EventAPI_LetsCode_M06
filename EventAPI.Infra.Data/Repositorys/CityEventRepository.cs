@@ -116,6 +116,19 @@ ON E.IdEvent = R.IdEvent WHERE R.PersonName = @PersonName AND E.Title LIKE '%'+@
                 return long.Parse(conn.QueryFirstOrDefault<long>(query, parameters).ToString());
             
         }
+        public long GetIdEvent(long idEvent)
+        {
+
+            var query = $"SELECT idEvent FROM CityEvent WHERE idEvent = @IdEvent";
+
+            var parameters = new DynamicParameters();
+            parameters.Add("IdEvent", idEvent);
+
+            using var conn = new SqlConnection(_configuration.GetConnectionString("DefaultConnection"));
+
+            return long.Parse(conn.QueryFirstOrDefault<long>(query, parameters).ToString());
+
+        }
 
         public bool RemoveEvent(long idEvent)
         {

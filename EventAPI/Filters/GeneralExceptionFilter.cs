@@ -19,7 +19,7 @@ namespace EventAPI.Filters
             Console.WriteLine($"Tipo da exceção {context.Exception.GetType().Name}, mensagem {context.Exception.Message}, stack trace {context.Exception.StackTrace}");
 
             switch (context.Exception)
-            {
+            { 
                 case SqlException:
                     problem.Status = StatusCodes.Status503ServiceUnavailable;
                     problem.Detail = "Erro inesperado ao se comunicar com o banco de dados";

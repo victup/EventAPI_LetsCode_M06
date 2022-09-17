@@ -84,15 +84,15 @@ namespace EventAPI.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
-        [ServiceFilter(typeof(ValidateCityEventActionFilter))]
+        [ServiceFilter(typeof(UpdateEventActionFilter))]
         [Authorize(Roles = "admin")]
-        public IActionResult UpdateEvent(string titleEvent, Event eventForUpdate)
+        public IActionResult UpdateEvent(long idEvent, Event eventForUpdate)
         {
-            Console.WriteLine($"Atualizando o evento  {titleEvent} p/ novo Titulo: {eventForUpdate.Title}");
+            Console.WriteLine($"Atualizando o evento id: {idEvent} p/ novo Titulo: {eventForUpdate.Title}");
 
-            if (!_cityEventService.UpdateEvent(titleEvent, eventForUpdate))
+            if (!_cityEventService.UpdateEvent(idEvent, eventForUpdate))
             {
-                return new StatusCodeResult(StatusCodes.Status500InternalServerError);
+                return new StatusCodeResult(StatusCodes.Status400BadRequest);
             }
 
             return Ok(eventForUpdate);
@@ -105,7 +105,7 @@ namespace EventAPI.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
-        [ServiceFilter(typeof(ValidateCityEventActionFilter))]
+        [ServiceFilter(typeof(DeleteEventActionFilter))]
         [Authorize(Roles = "admin")]
         public ActionResult<List<Event>> CancelEvent(string titleEvent)
         {
@@ -113,7 +113,7 @@ namespace EventAPI.Controllers
 
             if (!_cityEventService.RemoveEvent(titleEvent))
             {
-                return new StatusCodeResult(StatusCodes.Status500InternalServerError);
+                return new StatusCodeResult(StatusCodes.Status400BadRequest);
             }
             return Ok();
         }

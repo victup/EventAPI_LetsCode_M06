@@ -17,6 +17,7 @@ namespace EventAPI.Core.Interfaces.RepositorysInterface
         public List<Event> GetEventByPriceAndDate(decimal minPrice, decimal maxPrice, DateTime dateEvent);
         public List<Event> GetEventByPersonNameAndTitle(string personName, string titleEvent);
         public long GetIdEvent(string titleEvent);
+        public long GetIdEvent(long idEvent);
         public long CheckExistenceOfReservation(long idEvent);
         public bool InactivateEvent(long idEvent);
     }

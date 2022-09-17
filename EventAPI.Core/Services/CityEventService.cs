@@ -51,10 +51,14 @@ namespace EventAPI.Core.Services
                 return _cityEventRepository.InactivateEvent(eventForRemove);
         }
 
-        public bool UpdateEvent(string titleEvent, Event eventForUpdate)
+        public bool UpdateEvent(long idEvent, Event eventForUpdate)
         {
-            var idEvent = _cityEventRepository.GetIdEvent(titleEvent);
-            return _cityEventRepository.UpdateEvent(idEvent, eventForUpdate);
+            var idEventForUpdate = _cityEventRepository.GetIdEvent(idEvent);
+            
+            if(idEventForUpdate > 0)
+                return _cityEventRepository.UpdateEvent(idEvent, eventForUpdate);
+            else return false;
+            
         }
     }
 }

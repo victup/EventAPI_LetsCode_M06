@@ -7,6 +7,7 @@ using EventAPI.Filters;
 using EventAPI.Infra.Data.Repositorys;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
+using Microsoft.OpenApi.Models;
 using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -46,7 +47,30 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+builder.Services.AddSwaggerGen(options =>
+{
+    // Include 'SecurityScheme' to use JWT Authentication
+    var jwtSecurityScheme = new OpenApiSecurityScheme
+    {
+        BearerFormat = "JWT",
+        Name = "JWT Authentication",
+        In = ParameterLocation.Header,
+        Type = SecuritySchemeType.Http,
+        Scheme = JwtBearerDefaults.AuthenticationScheme,
+        Description = "Put *ONLY* your JWT Bearer token on textbox below!",
+
+        Reference = new OpenApiReference
+        {
+            Id = JwtBearerDefaults.AuthenticationScheme,
+            Type = ReferenceType.SecurityScheme
+        }
+    };
+    options.AddSecurityDefinition(jwtSecurityScheme.Reference.Id, jwtSecurityScheme);
+    options.AddSecurityRequirement(new OpenApiSecurityRequirement
+    {
+        { jwtSecurityScheme, Array.Empty<string>() }
+    });
+});
 
 builder.Services.AddMvc(options =>
 {
@@ -63,7 +87,8 @@ builder.Services.AddScoped<IEventReservationService, EventReservationService>();
 builder.Services.AddScoped<IEventReservationRepository, EventReservationRepository>();
 builder.Services.AddScoped<DeleteBookingActionFilter>();
 builder.Services.AddScoped<UpdateBookingActionFilter>();
-builder.Services.AddScoped<ValidateCityEventActionFilter>();
+builder.Services.AddScoped<DeleteEventActionFilter>();
+builder.Services.AddScoped<UpdateEventActionFilter>();
 builder.Services.AddScoped<IBookingMapper, BookingMapper>();
 
 var app = builder.Build();
