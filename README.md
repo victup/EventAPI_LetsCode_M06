@@ -10,7 +10,7 @@ Estrutura de tabelas utilizadas (SQL Server):
 	Title VARCHAR(100) NOT NULL,
 	Description VARCHAR(255) NULL,
 	DateHourEvent DateTime NOT NULL,
-	Local VARCHAR(150) NOT NULL,
+	Local VARCHAR(150) NOT NULL, 
 	Address VARCHAR (255) NULL,
 	Price DECIMAL NULL,
 	Status BIT NOT NULL
