@@ -37,6 +37,9 @@ Insira um ederenço válido e deamais credencias onde foi criado o Banco de Dado
   ## Autenticação e Autorização
   É necessário gerar um Token na API de Clientes, e inserir antes de executar qualquer método da API de Eventos. 
   
+  Baixe a APIClientes para gerar o Token, leia o título <b> Geração de Token </b> na APIClientes
+  > Repositório : https://github.com/victup/APIClientes_LetsCode_M06
+  
   ![image](https://user-images.githubusercontent.com/38474570/190838931-f920e14b-9c07-47a5-a611-d1fd2a11e236.png)
 
 Preencha com o token e clique em Authorize
