@@ -4,6 +4,7 @@ using EventAPI.Core.Model;
 using Microsoft.Data.SqlClient;
 using Microsoft.Extensions.Configuration;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
@@ -40,7 +41,17 @@ namespace EventAPI.Infra.Data.Repositorys
 
             using var conn = new SqlConnection(_configuration.GetConnectionString("DefaultConnection"));
 
-            return conn.Execute(query, parameters) == 1; //== linhas afetadas
+            try
+            {
+                return conn.Execute(query, parameters) == 1; //== linhas afetadas
+            }
+            catch(Exception)
+            {
+                Console.WriteLine("Erro no banco de Dados: CityEventRepository/AddNewEvent ");
+                throw;
+            }
+          
+           
         }
 
         public List<Event> GetEventByLocalAndDate(string localEvent, DateTime dateEvent)
@@ -55,8 +66,16 @@ namespace EventAPI.Infra.Data.Repositorys
             parameters.Add("Date", dateHourEvent);
 
             using var conn = new SqlConnection(_configuration.GetConnectionString("DefaultConnection"));
-
-            return conn.Query<Event>(query, parameters).ToList();
+            try
+            {
+                return conn.Query<Event>(query, parameters).ToList();
+            }
+            catch (Exception)
+            {
+                Console.WriteLine("Erro no banco de Dados: CityEventRepository/GetEventByLocalAndDate ");
+                throw;
+            }
+            
         }
 
         public List<Event> GetEventByPriceAndDate(decimal minPrice, decimal maxPrice, DateTime dateEvent)
@@ -71,8 +90,16 @@ namespace EventAPI.Infra.Data.Repositorys
             parameters.Add ("Date", dateHourEvent);
 
             using var conn = new SqlConnection(_configuration.GetConnectionString("DefaultConnection"));
-
-            return conn.Query<Event>(query, parameters).ToList();
+            try
+            {
+                return conn.Query<Event>(query, parameters).ToList();
+            }
+            catch (Exception)
+            {
+                Console.WriteLine("Erro no banco de Dados: CityEventRepository/GetEventByPriceAndDate ");
+                throw;
+            }
+            
         }
 
         public List<Event> GetEventByTitle(string titleEvent)
@@ -85,7 +112,16 @@ namespace EventAPI.Infra.Data.Repositorys
 
             using var conn = new SqlConnection(_configuration.GetConnectionString("DefaultConnection"));
 
-            return conn.Query<Event>(query, parameters).ToList();
+            try
+            {
+                return conn.Query<Event>(query, parameters).ToList();
+            }
+            catch (Exception)
+            {
+                Console.WriteLine("Erro no banco de Dados: CityEventRepository/GetEventByTitle ");
+                throw;
+            }
+            
         }
 
         public List<Event> GetEventByPersonNameAndTitle(string personName, string titleEvent)
@@ -100,7 +136,17 @@ ON E.IdEvent = R.IdEvent WHERE R.PersonName = @PersonName AND E.Title LIKE '%'+@
     
             using var conn = new SqlConnection(_configuration.GetConnectionString("DefaultConnection"));
 
-            return conn.Query<Event>(query, parameters).ToList();
+            
+
+            try
+            {
+                return conn.Query<Event>(query, parameters).ToList();
+            }
+            catch (Exception)
+            {
+                Console.WriteLine("Erro no banco de Dados: CityEventRepository/GetEventByPersonNameAndTitle ");
+                throw;
+            }
         }
 
         public long GetIdEvent(string titleEvent)
@@ -113,8 +159,17 @@ ON E.IdEvent = R.IdEvent WHERE R.PersonName = @PersonName AND E.Title LIKE '%'+@
 
                 using var conn = new SqlConnection(_configuration.GetConnectionString("DefaultConnection"));
 
-                return long.Parse(conn.QueryFirstOrDefault<long>(query, parameters).ToString());
-            
+                
+
+                try
+                {
+                    return long.Parse(conn.QueryFirstOrDefault<long>(query, parameters).ToString());
+                }
+                catch (Exception)
+                {
+                    Console.WriteLine("Erro no banco de Dados: CityEventRepository/GetIdEvent(title)");
+                    throw;
+                }
         }
         public long GetIdEvent(long idEvent)
         {
@@ -126,7 +181,17 @@ ON E.IdEvent = R.IdEvent WHERE R.PersonName = @PersonName AND E.Title LIKE '%'+@
 
             using var conn = new SqlConnection(_configuration.GetConnectionString("DefaultConnection"));
 
-            return long.Parse(conn.QueryFirstOrDefault<long>(query, parameters).ToString());
+            
+
+            try
+            {
+                return long.Parse(conn.QueryFirstOrDefault<long>(query, parameters).ToString());
+            }
+            catch (Exception)
+            {
+                Console.WriteLine("Erro no banco de Dados: CityEventRepository/GetIdEvent(idEvent) ");
+                throw;
+            }
 
         }
 
@@ -138,8 +203,18 @@ ON E.IdEvent = R.IdEvent WHERE R.PersonName = @PersonName AND E.Title LIKE '%'+@
             parameters.Add("IdEvent", idEvent);
 
             using var conn = new SqlConnection(_configuration.GetConnectionString("DefaultConnection"));
-    
-            return conn.Execute(queryDeletar, parameters) == 1;   
+
+
+            try
+            {
+                return conn.Execute(queryDeletar, parameters) == 1;
+            }
+            catch (Exception)
+            {
+                Console.WriteLine("Erro no banco de Dados: CityEventRepository/RemoveEvent ");
+                throw;
+            }
+             
         }
 
         public long CheckExistenceOfReservation (long idEvent)
@@ -152,7 +227,17 @@ ON E.IdEvent = R.IdEvent WHERE E.IdEvent = @IdEvent";
 
             using var conn = new SqlConnection(_configuration.GetConnectionString("DefaultConnection"));
 
-            return long.Parse(conn.QueryFirstOrDefault<long>(query, parameters).ToString());
+            
+
+            try
+            {
+                return long.Parse(conn.QueryFirstOrDefault<long>(query, parameters).ToString());
+            }
+            catch (Exception)
+            {
+                Console.WriteLine("Erro no banco de Dados: CityEventRepository/CheckExistenceOfReservation ");
+                throw;
+            }
         }
 
         public bool InactivateEvent(long idEvent)
@@ -164,7 +249,17 @@ ON E.IdEvent = R.IdEvent WHERE E.IdEvent = @IdEvent";
 
             using var conn = new SqlConnection(_configuration.GetConnectionString("DefaultConnection"));
 
-            return conn.Execute(query, parameters) == 1;
+           
+
+            try
+            {
+                return conn.Execute(query, parameters) == 1;
+            }
+            catch (Exception)
+            {
+                Console.WriteLine("Erro no banco de Dados: CityEventRepository/InactivateEvent ");
+                throw;
+            }
         }
 
         public bool UpdateEvent(long idEvent, Event eventForUpdate)
@@ -184,7 +279,17 @@ ON E.IdEvent = R.IdEvent WHERE E.IdEvent = @IdEvent";
 
             using var conn = new SqlConnection(_configuration.GetConnectionString("DefaultConnection"));
 
-            return conn.Execute(query, parameters) == 1;
+            
+
+            try
+            {
+                return conn.Execute(query, parameters) == 1;
+            }
+            catch (Exception)
+            {
+                Console.WriteLine("Erro no banco de Dados: CityEventRepository/UpdateEvent ");
+                throw;
+            }
 
         } 
     }

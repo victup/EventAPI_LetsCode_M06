@@ -5,6 +5,7 @@ using EventAPI.Core.Model.DTOs;
 using Microsoft.Data.SqlClient;
 using Microsoft.Extensions.Configuration;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -32,8 +33,16 @@ namespace EventAPI.Infra.Data.Repositorys
       
 
             using var conn = new SqlConnection(_configuration.GetConnectionString("DefaultConnection"));
-
-            return conn.Execute(query, parameters) == 1;
+            try
+            {
+                return conn.Execute(query, parameters) == 1;
+            }
+            catch(Exception)
+            {
+                Console.WriteLine("Erro no banco de dados. CityEventRepository/AddNewBooking");
+                throw;
+            }
+            
         }
 
         public List<EventReservation> GetBookingByPersonNameAndTitle(string personName, string eventTitle)
@@ -48,7 +57,17 @@ ON E.IdEvent = R.IdEvent WHERE R.PersonName = @PersonName AND E.Title LIKE '%'+@
 
             using var conn = new SqlConnection(_configuration.GetConnectionString("DefaultConnection"));
 
-            return conn.Query<EventReservation>(query, parameters).ToList();
+            try
+            {
+                return conn.Query<EventReservation>(query, parameters).ToList();
+            }
+            catch (Exception)
+            {
+                Console.WriteLine("Erro no banco de dados. CityEventRepository/GetBookingByPersonNameAndTitle");
+                throw;
+            }
+
+            
         }
 
         public long GetIdBooking(string personName, string eventTitle)
@@ -65,7 +84,17 @@ WHERE R.PersonName = @PersonName AND E.Title = @EventTitle";
 
             using var conn = new SqlConnection(_configuration.GetConnectionString("DefaultConnection"));
 
-            return long.Parse(conn.QueryFirstOrDefault<long>(queryIdBooking, parameters).ToString());
+            try
+            {
+                return long.Parse(conn.QueryFirstOrDefault<long>(queryIdBooking, parameters).ToString());
+            }
+            catch (Exception)
+            {
+                Console.WriteLine("Erro no banco de dados. CityEventRepository/GetIdBooking(personName, eventTitle)");
+                throw;
+            }
+
+            
         }
 
         public long GetIdBooking(long idBooking)
@@ -77,7 +106,16 @@ WHERE R.PersonName = @PersonName AND E.Title = @EventTitle";
 
             using var conn = new SqlConnection(_configuration.GetConnectionString("DefaultConnection"));
 
-            return long.Parse(conn.QueryFirstOrDefault<long>(queryIdBooking, parameters).ToString());
+
+            try
+            {
+                return long.Parse(conn.QueryFirstOrDefault<long>(queryIdBooking, parameters).ToString());
+            }
+            catch (Exception)
+            {
+                Console.WriteLine("Erro no banco de dados. CityEventRepository/GetIdBooking(idBooking)");
+                throw;
+            }
         }
 
         public bool RemoveBooking(long idEventReservation)
@@ -96,9 +134,8 @@ WHERE R.PersonName = @PersonName AND E.Title = @EventTitle";
             }
             catch (Exception)
             {
-                Console.WriteLine("Não foi possível excluir o evento.");
-                Console.WriteLine("Local Error: CityEventRepository/RemoveEvent");
-                return false;
+                Console.WriteLine("Erro no banco de dados. CityEventRepository/RemoveBooking");
+                throw;
             }
 
         }
@@ -116,7 +153,16 @@ WHERE R.PersonName = @PersonName AND E.Title = @EventTitle";
 
             using var conn = new SqlConnection(_configuration.GetConnectionString("DefaultConnection"));
 
-            return conn.Execute(query, parameters) == 1;
+           
+            try
+            {
+                return conn.Execute(query, parameters) == 1;
+            }
+            catch (Exception)
+            {
+                Console.WriteLine("Erro no banco de dados. CityEventRepository/UpdateBooking");
+                throw;
+            }
         }
     }
 }
